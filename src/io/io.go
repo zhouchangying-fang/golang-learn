@@ -46,6 +46,9 @@ func main() {
 	}
 	F2, e2 := ioutil.ReadFile("zhou/a.txt")
 	fmt.Printf("ReadFile:---%s,err:%v\n", F2, e2)
-	ioutil.TempDir("zhou", "zhoufangtao")
+	dir, _ := ioutil.TempDir("zhou", "zhoufangtao") //创建临时文件夹
+	ioutil.TempFile(dir, "zhou*.txt")               //创建临时文件
+	fmt.Println(os.RemoveAll(dir))
+	ioutil.WriteFile("zhou/b.txt", []byte("asdf"), 0777) //写入文件内容，文件不纯正就创建
 
 }
