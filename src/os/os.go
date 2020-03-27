@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"os/exec"
 )
 
 func main() {
@@ -16,6 +17,7 @@ func main() {
 	fmt.Println(l, bool)
 	fmt.Println("Mkdir:在当前gopath下新建zhou文件夹", os.Mkdir("zhou", 777))
 	fmt.Println("MkdirAll:递阶创建文件夹", os.MkdirAll("zhou/txt", 777))
+	os.OpenFile("zhou/a.txt", os.O_CREATE|os.O_RDWR, 0777)
 	fmt.Println("Link:复制文件", os.Link("zhou/a.txt", "zhou/txt/a.txt"))
 	s, e := os.Readlink("zhou/txt/a.txt")
 	fmt.Println("Readlink:-s:", s, "e:", e)
@@ -29,4 +31,13 @@ func main() {
 	fmt.Println("Setenv:设置env变量---", os.Setenv("name", "zhoufangtao"))
 	fmt.Println("Unsetenv:删除env变量---", os.Unsetenv("name"))
 	//fmt.Println("RemoveAll:",os.RemoveAll("zhou"))
+
+	/*go/exec----执行外部命令*/
+	s, e = exec.LookPath("zhou/txt/a.txt")
+	fmt.Printf("LookPath:文件的路径---%v,err:%v\n", s, e)
+	cmd := exec.Command("zhou/txt/a.txt")
+	fmt.Printf("Command:---%p\n", cmd)
+	b, e := cmd.CombinedOutput()
+	fmt.Printf("b:%s,err:%v\n", b, e)
+
 }
