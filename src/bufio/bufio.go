@@ -39,4 +39,20 @@ func main() {
 	fmt.Println("r.Size:--", r.Size())
 	r.WriteTo(os.Stdout)
 
+	rd := strings.NewReader("woaiheini2")
+	sc := bufio.NewScanner(rd)
+	fmt.Println()
+	buf2 := make([]byte, 10)
+	sc.Buffer(buf2, 40)
+	fmt.Println(sc.Scan())
+	fmt.Printf("Bytes:--%d\n", sc.Bytes())
+	fmt.Println("Err:---", sc.Err())
+	fmt.Println("Text:---", sc.Text())
+	w := bufio.NewWriter(os.Stdout)
+	fmt.Println("NewWriter:---", w.Available())
+	fmt.Println("Buffered:---", w.Buffered())
+	rd1 := strings.NewReader("woaiheini3")
+
+	w.ReadFrom(rd1)
+
 }
