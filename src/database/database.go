@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"crypto/md5"
 	"database/sql"
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
@@ -25,5 +26,6 @@ func main() {
 	}
 	defer db.Close()
 	fmt.Println("Driver:---", db.Driver())
-
+	res, er := db.Exec("INSERT INTO user (name,pwd) VALUES (?,?)", "张三", fmt.Sprintf("%x", md5.Sum([]byte("123456"))))
+	fmt.Printf("res:%s,err:%v", res, er)
 }
