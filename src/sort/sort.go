@@ -20,4 +20,10 @@ func main() {
 	} else {
 		fmt.Println("not found")
 	}
+	people := []int{18, 15, 20}
+
+	sort.SliceStable(people, func(i, j int) bool {
+		return people[i] > people[j]
+	})
+	fmt.Println(people)
 }
