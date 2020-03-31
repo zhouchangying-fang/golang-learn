@@ -13,7 +13,7 @@ var (
 
 func main() {
 	fmt.Printf("Drivers:---%s\n", sql.Drivers())
-	db, err := sql.Open("mysql", "root:1@tcp(127.0.0.1:3306)/golang?charset=utf8")
+	db, err := sql.Open("mysql", "root:123456@tcp(127.0.0.1:3306)/golang?charset=utf8")
 	if err != nil {
 		fmt.Println("err:", err)
 		return
