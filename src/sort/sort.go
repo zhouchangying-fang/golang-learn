@@ -26,4 +26,7 @@ func main() {
 		return people[i] > people[j]
 	})
 	fmt.Println(people)
+	s2 := []int{5, 2, 6, 3, 1, 4}
+	sort.Reverse(sort.IntSlice(s2))
+
 }
