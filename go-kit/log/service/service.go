@@ -4,10 +4,10 @@ type Service interface {
 	Add(a, b int) int
 }
 
-type serviceImpl struct {
+type ServiceImpl struct {
 }
 
-func (st serviceImpl) Add(a, b int) int {
+func (st ServiceImpl) Add(a, b int) int {
 	return a + b
 }
 
