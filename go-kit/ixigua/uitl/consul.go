@@ -2,11 +2,15 @@ package uitl
 
 import (
 	"fmt"
+	"github.com/google/uuid"
 	"github.com/hashicorp/consul/api"
 	"log"
 )
 
 var Client *api.Client
+var Id string
+var Name string
+var Port int
 
 func init() {
 	config := api.DefaultConfig()
@@ -17,12 +21,18 @@ func init() {
 	}
 	Client = client
 }
+func SetNamePort(name string, port int) {
+	Name = name
+	Port = port
+	Id = uuid.New().String()
+}
 func Register() {
 	reg := api.AgentServiceRegistration{}
-	reg.ID = "userService"
-	reg.Name = "userService"
+	reg.ID = Id
+	reg.Name = Name
 	reg.Address = "10.118.38.11"
-	reg.Port = 8080
+	reg.Port = Port
+	reg.Tags = []string{"primary"}
 
 	check := api.AgentServiceCheck{}
 	check.Interval = "5s"
@@ -35,7 +45,7 @@ func Register() {
 	}
 }
 func DeRegister() {
-	err := Client.Agent().ServiceDeregister("userService")
+	err := Client.Agent().ServiceDeregister(Id)
 	if err != nil {
 		fmt.Println(err)
 	}
