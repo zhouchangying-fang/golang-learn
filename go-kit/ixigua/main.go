@@ -24,7 +24,10 @@ func main() {
 	uitl.SetNamePort(*name, *port)
 	svc := service.UserServiceImpl{}
 	end := service.RateLimit(limit)(service.MakeUserEndpoint(svc))
-	hand := kithttp.NewServer(end, service.DecodeUserServiceRequest, service.EncodeUserServiceResponse)
+	options := []kithttp.ServerOption{
+		kithttp.ServerErrorEncoder(uitl.MyErrorEncoder),
+	}
+	hand := kithttp.NewServer(end, service.DecodeUserServiceRequest, service.EncodeUserServiceResponse, options...)
 	r := mux.NewRouter()
 	r.Methods("GET").Path("/user/{uid:[0-9]+}").Handler(hand)
 	uitl.Register()

@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"github.com/afex/hystrix-go/hystrix"
 	"github.com/go-kit/kit/endpoint"
 	"github.com/go-kit/kit/log"
 	"github.com/go-kit/kit/sd"
@@ -14,15 +15,31 @@ import (
 	"io"
 	"net/url"
 	"os"
-	"time"
 )
 
 func main() {
+	hystrix.ConfigureCommand("getUser", hystrix.CommandConfig{
+		Timeout: 2000,
+	})
+	err := hystrix.Do("getUser", func() error {
+		s, err := getUser()
+		fmt.Println("name----------:", s)
+		return err
+	}, func(err error) error {
+		fmt.Println("降级方法")
+		return err
+	})
+	if err != nil {
+		fmt.Println("err-------:", err)
+	}
+}
+
+func getUser() (string, error) {
 	config := api.DefaultConfig()
 	config.Address = "192.168.26.10:8500"
 	client, err := api.NewClient(config)
 	if err != nil {
-
+		return "", err
 	}
 	client1 := consul.NewClient(client)
 	var logger log.Logger
@@ -41,18 +58,17 @@ func main() {
 	for {
 		edp, err := bl.Endpoint()
 		if err != nil {
-			fmt.Println("-----------", err)
+			return "", err
 		}
 		ctx := context.Background()
 		res, err := edp(ctx, service.UserRequest{
 			Uid: 100,
 		})
 		if err != nil {
-			fmt.Println(err)
+			return "", nil
 		}
 		rep := res.(service.UserResponse)
-		fmt.Println("------------", rep.UserName)
-		time.Sleep(3 * time.Second)
+		return rep.UserName, nil
 	}
 
 	/*u, _ := url.Parse("http://localhost:8080")
